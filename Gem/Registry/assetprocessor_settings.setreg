@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder hello_o3de_world/Assets": {
+                    "watch": "@GEMROOT:hello_o3de_world@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder hello_o3de_world/Registry": {
+                    "watch": "@GEMROOT:hello_o3de_world@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
