@@ -96,12 +96,25 @@ jobs:
         echo "====================================================="
         echo "Installing O3DE Version: ${{env.O3DE_VERSION}}"
         echo "====================================================="
-        # dir .
-        echo "====================================================="
-        msiexec /i o3de_${{env.O3DE_VERSION}}.msi /qn INSTALLDIR="D:\a\engine\bakabaka"
-        cd ../
-        Get-Location
+        echo "Current directory contains:"
         dir .
+        echo "====================================================="
+        $log = "D:\a\engine\install.log"
+        $exit = (Start-Process msiexec.exe -ArgumentList @(
+          "/i", "o3de_${env:O3DE_VERSION}.msi",
+          "/qn", "/norestart",
+          "/l*v", "`"$log`"",
+          "INSTALLDIR=`"D:\a\engine\bakabaka`""
+        ) -PassThru -Wait).ExitCode
+
+        Write-Host "msiexec exit code: $exit"
+
+        if ($exit -ne 0) {
+          Write-Host "❌ Installer failed! Last 50 lines of log:"
+          Get-Content $log -Tail 50
+          exit $exit
+        }
+
 
 
     # - name: Download O3DE Engine
