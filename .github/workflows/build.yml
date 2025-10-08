@@ -9,6 +9,10 @@ on:
 
 jobs:
   build:
+    env:
+      O3DE_VERSION: 25.05.1
+      O3DE_WEB_VERSION_TAG: 2505_1
+
     strategy:
       fail-fast: false
       matrix:
@@ -74,14 +78,6 @@ jobs:
       run: |
         curl.exe --version
 
-    # - name: Check Current Location
-    #   if: runner.os == 'Windows'
-    #   shell: powershell
-    #   run: |
-    #     Get-Location
-    #     cd ..
-    #     Get-Location
-
     - name: Install O3DE (Windows)
       if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Windows'
       shell: powershell
@@ -92,8 +88,10 @@ jobs:
         mkdir engine
         cd engine
         Get-Location
-        # dir .
-
+        curl.exe https://o3debinaries.org/main/Latest/Windows/o3de_installer_${{env.O3DE_WEB_VERSION_TAG}}-offline.zip -o o3de_installer_${{env.O3DE_WEB_VERSION_TAG}}.zip
+        Expand-Archive -Path .\o3de_installer_2025_1.zip -DestinationPath installer\
+        cd installer
+        dir # Temporary stuvv
 
 
     # - name: Download O3DE Engine
