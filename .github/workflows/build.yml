@@ -89,9 +89,9 @@ jobs:
         Get-Location
         cd ../..
         Get-Location
-        # mkdir engine
-        # cd engine
-        # cd
+        mkdir engine
+        cd engine
+        Get-Location
         # dir .
 
 
