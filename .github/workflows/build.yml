@@ -76,8 +76,10 @@ jobs:
     - name: Install O3DE (Windows)
       if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Windows'
       run: |
+        cd
         dir .
         cd ../
+        cd
         mkdir engine
         cd engine
         cd
