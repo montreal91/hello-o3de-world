@@ -68,20 +68,31 @@ jobs:
           ${{ github.workspace }}/o3de-engine
         key: o3de-${{ runner.os }}-25.05.1
 
+    - name: Check Curl
+      if: runner.os == 'Windows'
+      run: |
+        curl --version
+
     - name: Install O3DE (Windows)
       if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Windows'
       run: |
         dir .
+        cd ../
+        mkdir engine
+        cd engine
+        dir .
 
-    - name: Download O3DE Engine
-      if: steps.cache-o3de.outputs.cache-hit != 'true'
-      run: |
-        # You'll need to download and extract O3DE here
-        # This is simplified - adjust URLs based on actual O3DE releases
-        echo "Download O3DE SDK for ${{ runner.os }}"
-        # Example for downloading (adjust actual URLs):
-        # wget https://o3de.org/downloads/o3de-sdk-windows.zip
-        # unzip o3de-sdk-windows.zip -d o3de-engine
+
+
+    # - name: Download O3DE Engine
+    #   if: steps.cache-o3de.outputs.cache-hit != 'true'
+    #   run: |
+    #     # You'll need to download and extract O3DE here
+    #     # This is simplified - adjust URLs based on actual O3DE releases
+    #     echo "Download O3DE SDK for ${{ runner.os }}"
+    #     # Example for downloading (adjust actual URLs):
+    #     # wget https://o3de.org/downloads/o3de-sdk-windows.zip
+    #     # unzip o3de-sdk-windows.zip -d o3de-engine
 
     # - name: Register O3DE Engine
     #   shell: bash
