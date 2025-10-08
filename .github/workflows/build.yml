@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest] # ubuntu-latest, macos-latest]
         config: [profile]
 
     runs-on: ${{ matrix.os }}
@@ -36,28 +36,28 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     # Linux specific setup
-    - name: Install dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          clang \
-          cmake \
-          ninja-build \
-          libxcb-xinerama0 \
-          libxcb-xinput0 \
-          libxcb-xfixes0 \
-          libxcb-xkb1 \
-          libxkbcommon-x11-0 \
-          libfontconfig1-dev \
-          libglu1-mesa-dev \
-          libssl-dev
+    # - name: Install dependencies (Linux)
+    #   if: runner.os == 'Linux'
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y \
+    #       clang \
+    #       cmake \
+    #       ninja-build \
+    #       libxcb-xinerama0 \
+    #       libxcb-xinput0 \
+    #       libxcb-xfixes0 \
+    #       libxcb-xkb1 \
+    #       libxkbcommon-x11-0 \
+    #       libfontconfig1-dev \
+    #       libglu1-mesa-dev \
+    #       libssl-dev
 
     # macOS specific setup
-    - name: Install dependencies (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew install cmake ninja
+    # - name: Install dependencies (macOS)
+    #   if: runner.os == 'macOS'
+    #   run: |
+    #     brew install cmake ninja
 
     # Download and setup O3DE
     - name: Cache O3DE Engine
@@ -67,6 +67,11 @@ jobs:
         path: |
           ${{ github.workspace }}/o3de-engine
         key: o3de-${{ runner.os }}-25.05.1
+
+    - name: Install O3DE (Windows)
+      if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Windows'
+      run: |
+        dir .
 
     - name: Download O3DE Engine
       if: steps.cache-o3de.outputs.cache-hit != 'true'
@@ -78,63 +83,63 @@ jobs:
         # wget https://o3de.org/downloads/o3de-sdk-windows.zip
         # unzip o3de-sdk-windows.zip -d o3de-engine
 
-    - name: Register O3DE Engine
-      shell: bash
-      run: |
-        if [ "${{ runner.os }}" = "Windows" ]; then
-          python o3de-engine/scripts/o3de.py register --this-engine
-        else
-          python3 o3de-engine/scripts/o3de.py register --this-engine
-        fi
+    # - name: Register O3DE Engine
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ runner.os }}" = "Windows" ]; then
+    #       python o3de-engine/scripts/o3de.py register --this-engine
+    #     else
+    #       python3 o3de-engine/scripts/o3de.py register --this-engine
+    #     fi
 
-    - name: Register Project
-      shell: bash
-      run: |
-        if [ "${{ runner.os }}" = "Windows" ]; then
-          python o3de-engine/scripts/o3de.py register --project-path ${{ github.workspace }} --default-project
-        else
-          python3 o3de-engine/scripts/o3de.py register --project-path ${{ github.workspace }} --default-project
-        fi
+    # - name: Register Project
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ runner.os }}" = "Windows" ]; then
+    #       python o3de-engine/scripts/o3de.py register --project-path ${{ github.workspace }} --default-project
+    #     else
+    #       python3 o3de-engine/scripts/o3de.py register --project-path ${{ github.workspace }} --default-project
+    #     fi
 
     # Configure CMake
-    - name: Configure CMake (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        mkdir build
-        cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64
+    # - name: Configure CMake (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     mkdir build
+    #     cd build
+    #     cmake .. -G "Visual Studio 17 2022" -A x64
 
-    - name: Configure CMake (Linux/Mac)
-      if: runner.os != 'Windows'
-      run: |
-        mkdir build
-        cd build
-        cmake .. -G "Ninja Multi-Config"
+    # - name: Configure CMake (Linux/Mac)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #     mkdir build
+    #     cd build
+    #     cmake .. -G "Ninja Multi-Config"
 
     # Build
-    - name: Build Project
-      run: |
-        cd build
-        cmake --build . --config ${{ matrix.config }} --parallel
+    # - name: Build Project
+    #   run: |
+    #     cd build
+    #     cmake --build . --config ${{ matrix.config }} --parallel
 
     # Package artifacts
-    - name: Package Artifacts (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        mkdir artifacts
-        cp -r build/bin/${{ matrix.config }}/* artifacts/
+    # - name: Package Artifacts (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     mkdir artifacts
+    #     cp -r build/bin/${{ matrix.config }}/* artifacts/
 
-    - name: Package Artifacts (Linux/Mac)
-      if: runner.os != 'Windows'
-      run: |
-        mkdir artifacts
-        cp -r build/bin/${{ matrix.config }}/* artifacts/
+    # - name: Package Artifacts (Linux/Mac)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #     mkdir artifacts
+    #     cp -r build/bin/${{ matrix.config }}/* artifacts/
 
     # Upload artifacts
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: hello_o3de_world-${{ runner.os }}-${{ matrix.config }}
-        path: artifacts/
-        retention-days: 30
-        if-no-files-found: error
+    # - name: Upload Build Artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: hello_o3de_world-${{ runner.os }}-${{ matrix.config }}
+    #     path: artifacts/
+    #     retention-days: 30
+    #     if-no-files-found: error
