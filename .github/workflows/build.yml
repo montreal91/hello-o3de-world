@@ -77,12 +77,17 @@ jobs:
         echo "Tryin' to install deb package"
         echo "-----------------------------"
 
-        apt install ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
+        # sudo apt install ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
-    # - name: DEB file check
-    #   if:  steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Linux'
-    #   run:
-    #     ls -l o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
+    - name: DEB file check
+      if:  steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Linux'
+      run:
+        ls -l o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
+
+    - name: Install O-three-dee (Ubuntu)
+      if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Linux'
+      run:
+        sudo dpkg -i ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
     # - name: Register O3DE Engine
     #   shell: bash
