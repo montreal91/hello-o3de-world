@@ -72,7 +72,7 @@ jobs:
       if: runner.os == 'Windows'
       shell: powershell
       run: |
-        curl --version
+        curl.exe --version
 
     # - name: Check Current Location
     #   if: runner.os == 'Windows'
