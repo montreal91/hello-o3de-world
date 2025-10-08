@@ -99,4 +99,4 @@ jobs:
     - name: Check O-Three-Dee Location
       if: runner.os == 'Linux'
       run: |
-        ls /opt/o3de/
+        dpkg -L o3de
