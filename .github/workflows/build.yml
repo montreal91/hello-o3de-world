@@ -96,7 +96,7 @@ jobs:
         echo "Installing O3DE Version: ${{env.O3DE_VERSION}}"
         dir .
         echo "====================================================="
-        msiexec /i .\o3de_${{env.O3DE_VERSION}}.msi /qn INSTALLDIR="D:\a\engine"
+        msiexec /i o3de_${{env.O3DE_VERSION}}.msi /qn INSTALLDIR="D:\a\engine"
         cd ../
         Get-Location
 
