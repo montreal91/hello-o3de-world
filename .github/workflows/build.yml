@@ -153,6 +153,7 @@ jobs:
 
     - name: Make current project default
       run:
+        source /opt/o3de_venv/bin/activate
         python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
 
     - name: Check current project status 3
