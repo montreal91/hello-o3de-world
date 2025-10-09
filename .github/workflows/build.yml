@@ -169,13 +169,13 @@ jobs:
     - name: Make the Build Directory
       run: mkdir build
 
-    # - name: Configure (CMake)
-    #   run: |
-    #     cd build
-    #     cmake -S "${{ github.workspace }}" -G "Ninja Multi-Config"
+    - name: Configure (CMake)
+      run: |
+        cd build
+        cmake -S "${{ github.workspace }}" -G "Ninja Multi-Config"
 
-    # - name: Build (APBatch + GameLauncher)
-    #   run: cmake --build . --target AssetProcessorBatch GameLauncher --config profile -j
+    - name: Build (APBatch + GameLauncher)
+      run: cmake --build . --target AssetProcessorBatch GameLauncher --config profile -j
 
     # - name: Process assets
     #   run: ${{ github.workspace }}/build/linux/bin/profile/AssetProcessorBatch --project-path "${{ github.workspace }}" --platform linux
