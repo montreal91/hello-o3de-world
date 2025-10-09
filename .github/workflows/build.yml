@@ -134,5 +134,4 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         source /opt/o3de_venv/bin/activate
-        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py
-                # /opt/O3DE/25.05.1/scripts/o3de.py
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -h
