@@ -151,16 +151,22 @@ jobs:
         source /opt/o3de_venv/bin/activate
         python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
 
+    - name: Make current project default
+      run:
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
 
-    # - name: Make current project default
-    #     python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
+    - name: Check current project status 3
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
 
     - name: check curent directory
       if: ${{ env.DEBUG }} == "true"
       run: ls
 
-    # - name: Make the Build Directory
-    #   run: mkdir build
+    - name: Make the Build Directory
+      run: mkdir build
 
     # - name: Configure (CMake)
     #   run: |
