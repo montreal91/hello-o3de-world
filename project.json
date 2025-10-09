@@ -1,0 +1,49 @@
+{
+    "project_name": "hello_o3de_world",
+    "version": "1.0.0",
+    "project_id": "{EF38CA07-13C3-4B7F-A31D-FDADA8221467}",
+    "origin": "The primary repo for hello_o3de_world goes here: i.e. http://www.mydomain.com",
+    "license": "What license hello_o3de_world uses goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT etc.",
+    "display_name": "hello_o3de_world",
+    "summary": "A short description of hello_o3de_world.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "hello_o3de_world"
+    ],
+    "icon_path": "preview.png",
+    "engine": "o3de-sdk",
+    "external_subdirectories": [
+        "MeinErstesEdelstein",
+        "Gem"
+    ],
+    "restricted": "hello_o3de_world",
+    "gem_names": [
+        "Atom",
+        "AudioSystem",
+        "CameraFramework",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EMotionFX",
+        "EditorPythonBindings",
+        "GameState",
+        "ImGui",
+        "LandscapeCanvas",
+        "LyShine",
+        "MeinErstesEdelstein",
+        "MiniAudio",
+        "PhysX",
+        "PrefabBuilder",
+        "PrimitiveAssets",
+        "RemoteTools",
+        "SaveData",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox",
+        "hello_o3de_world"
+    ],
+    "engine_version": "2.4.1"
+}

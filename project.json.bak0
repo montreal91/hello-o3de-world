@@ -1,0 +1,46 @@
+{
+    "project_name": "hello_o3de_world",
+    "version": "1.0.0",
+    "project_id": "{EF38CA07-13C3-4B7F-A31D-FDADA8221467}",
+    "origin": "The primary repo for hello_o3de_world goes here: i.e. http://www.mydomain.com",
+    "license": "What license hello_o3de_world uses goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT etc.",
+    "display_name": "hello_o3de_world",
+    "summary": "A short description of hello_o3de_world.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "hello_o3de_world"
+    ],
+    "icon_path": "preview.png",
+    "engine": "o3de",
+    "external_subdirectories": [
+        "Gem"
+    ],
+    "restricted": "hello_o3de_world",
+    "gem_names": [
+        "hello_o3de_world",
+        "Atom",
+        "AudioSystem",
+        "CameraFramework",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EditorPythonBindings",
+        "EMotionFX",
+        "GameState",
+        "ImGui",
+        "LandscapeCanvas",
+        "LyShine",
+        "MiniAudio",
+        "PhysX",
+        "PrimitiveAssets",
+        "PrefabBuilder",
+        "SaveData",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox",
+        "RemoteTools"
+    ]
+}

@@ -1,0 +1,184 @@
+name: Build O3DE Project (Linux)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    env:
+      O3DE_VERSION: 25.05.1
+      O3DE_WEB_VERSION_TAG: 2505_1
+      DEBUG: true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # os: [ubuntu-latest] # ubuntu-latest, macos-latest]
+        config: [profile]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Debug
+      run: |
+        echo "Current Debug State"
+        echo ${{ env.DEBUG }}
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies (Linux)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          clang \
+          cmake \
+          ninja-build \
+          libxcb-xinerama0 \
+          libxcb-xinput0 \
+          libxcb-xfixes0 \
+          libxcb-xkb1 \
+          libxkbcommon-x11-0 \
+          libfontconfig1-dev \
+          libglu1-mesa-dev \
+          libssl-dev \
+          libunwind-dev \
+          mesa-common-dev \
+          libxcb-xinput-dev \
+          libxcb-xfixes0-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          libxcb-xkb-dev
+
+    - name: Cache O3DE Engine
+      id: cache-o3de
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ github.workspace }}/o3de-engine
+        key: o3de-${{ runner.os }}-25.05.1
+
+    - name: Check Linux environment
+      if: ${{env.DEBUG}} == 'true'
+      run: |
+        echo "Current Location: [${pwd}]"
+        echo ""
+        ls
+
+    - name: Download O3DE Engine
+      if: steps.cache-o3de.outputs.cache-hit != 'true'
+      run: |
+        echo "Download O3DE SDK"
+        curl https://o3debinaries.org/main/Latest/Linux/o3de_${{ env.O3DE_WEB_VERSION_TAG }}.deb -o o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
+
+    - name: DEB file check
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        ls -l o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
+
+    - name: Install O-three-dee (Ubuntu)
+      run: |
+        sudo dpkg -i ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
+
+    - name: Check Python
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        python3 --version
+
+    - name: Get Python
+      run: |
+        /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
+
+    - name: python.sh Contents
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        cat /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
+
+    - name: Init Python Environment
+      run: |
+        /opt/O3DE/${{env.O3DE_VERSION}}/python/python.sh
+
+    - name: Make o3de Virtual Environment
+      run: |
+        echo "Checking current location"
+        pwd
+        python3 -m venv /opt/o3de_venv
+        source /opt/o3de_venv/bin/activate
+        pip install -r /opt/O3DE/${{env.O3DE_VERSION}}/python/requirements.txt
+        pip install -e /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de
+
+
+    - name: Check O-Three-Dee Python
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -h
+
+    - name: Check Initial Project Status
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
+
+    - name: Register O3DE engine
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register --this-engine
+
+    - name: Check current project status
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
+
+    - name: Register Current project
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register -pp "${{ github.workspace }}"
+
+    - name: Check current project status 2
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
+
+    - name: Make current project default
+      run:
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
+
+    - name: Check current project status 3
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
+
+    - name: check curent directory
+      if: ${{ env.DEBUG }} == "true"
+      run: ls
+
+    - name: Make the Build Directory
+      run: mkdir build
+
+    - name: Configure (CMake)
+      run: |
+        cd build
+        cmake -S "${{ github.workspace }}" -G "Ninja Multi-Config"
+
+    - name: Build (APBatch + GameLauncher)
+      run: cmake --build . --target AssetProcessorBatch GameLauncher --config profile -j
+
+    # - name: Process assets
+    #   run: ${{ github.workspace }}/build/linux/bin/profile/AssetProcessorBatch --project-path "${{ github.workspace }}" --platform linux
+
+    # - name: Smoke run (5s)
+    #   run: xvfb-run -a "${{ github.workspace }}/build/linux/bin/profile/GameLauncher" --project-path "${{ github.workspace }}" --console --exit-after 5

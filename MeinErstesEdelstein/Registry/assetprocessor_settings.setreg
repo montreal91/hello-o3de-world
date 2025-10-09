@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder MeinErstesEdelstein/Assets": {
+                    "watch": "@GEMROOT:MeinErstesEdelstein@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder MeinErstesEdelstein/Registry": {
+                    "watch": "@GEMROOT:MeinErstesEdelstein@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
