@@ -138,7 +138,7 @@ jobs:
       if: ${{ env.DEBUG }} == "true"
       run: |
         source /opt/o3de_venv/bin/activate
-        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register register-show
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register-show
 
     - name: Register Current project
       run: |
