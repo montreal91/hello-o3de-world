@@ -96,6 +96,10 @@ jobs:
       run:
         sudo dpkg -i ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
+    - name: Check Python
+      run: |
+        python3 --version
+
     - name: Init Python Environment
       if: runner.os == 'Linux'
       run: |
