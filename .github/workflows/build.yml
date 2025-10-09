@@ -12,7 +12,7 @@ jobs:
     env:
       O3DE_VERSION: 25.05.1
       O3DE_WEB_VERSION_TAG: 2505_1
-      DEBUG: false
+      DEBUG: 0
 
     strategy:
       fail-fast: false
