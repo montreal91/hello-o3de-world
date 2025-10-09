@@ -23,6 +23,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Check Debug
+      run: |
+        echo "Current Debug State"
+        echo ${{ env.DEBUG }}
+
     - name: Checkout repository
       uses: actions/checkout@v4
 
@@ -118,12 +123,30 @@ jobs:
         source /opt/o3de_venv/bin/activate
         python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -h
 
-    - name: Register O3DE engine & project
+    - name: Check Initial Project Status
+      if: ${{ env.DEBUG }} == "true"
       run: |
         source /opt/o3de_venv/bin/activate
-        python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register --this-engine
-        python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register -pp "${{ github.workspace }}"
-        python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register register-show
+
+    - name: Register O3DE engine
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register --this-engine
+
+    - name: Check current project status
+      if: ${{ env.DEBUG }} == "true"
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register register-show
+
+    - name: Register Current project
+      run: |
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register -pp "${{ github.workspace }}"
+
+    - name: Make current project default
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
 
     - name: check curent directory
       if: ${{ env.DEBUG }} == "true"
