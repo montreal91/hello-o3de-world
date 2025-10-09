@@ -103,7 +103,7 @@ jobs:
         cat /opt/O3DE/${{env.O3DE_VERSION}}/python/readme.md
         echo "\n<<< Finished reading a readme file >>>\n"
         echo "Trying to execute python venv installation script"
-        /opt/O3DE/2${{env.O3DE_VERSION}}/python/python.sh
+        /opt/O3DE/${{env.O3DE_VERSION}}/python/python.sh
 
 
     - name: Check O-Three-Dee Python
