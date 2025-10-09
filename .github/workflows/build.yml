@@ -100,7 +100,7 @@ jobs:
       run: |
         python3 --version
 
-    - naem: Get Python
+    - name: Get Python
       run: |
         echo "|Trying to get the Python stuff for o3de|"
         /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
