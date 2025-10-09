@@ -149,7 +149,7 @@ jobs:
       run: cmake --build . --target AssetProcessorBatch GameLauncher --config profile -j
 
     - name: Process assets
-      run: "${{ github.workspace }}/build/linux/bin/profile/AssetProcessorBatch" --project-path "${{ github.workspace }}" --platform linux
+      run: ${{ github.workspace }}/build/linux/bin/profile/AssetProcessorBatch --project-path "${{ github.workspace }}" --platform linux
 
     - name: Smoke run (5s)
       run: xvfb-run -a "${{ github.workspace }}/build/linux/bin/profile/GameLauncher" --project-path "${{ github.workspace }}" --console --exit-after 5
