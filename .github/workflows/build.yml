@@ -156,6 +156,8 @@ jobs:
       run: |
         echo "Check Fart"
 
+    # Dummy change
+
     # - name: Make current project default
     #     python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
 
