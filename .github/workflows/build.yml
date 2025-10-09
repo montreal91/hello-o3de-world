@@ -106,6 +106,7 @@ jobs:
         /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
     - name: python.sh Contents
+      if: false
       run: |
         cat /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
@@ -118,9 +119,20 @@ jobs:
         echo "Trying to execute python venv installation script"
         /opt/O3DE/${{env.O3DE_VERSION}}/python/python.sh
 
+    - name: Make o3de Virtual Environment
+      run: |
+        echo "Checking current location"
+        pwd
+        # cd /opt/o3de
+        python3 -m venv /opt/o3de_venv
+        source /opt/o3de_venv/bin/activate
+        pip install -r /opt/O3DE/${{env.O3DE_VERSION}}/python/requirements.txt
+        pip install -e /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de
+
 
     - name: Check O-Three-Dee Python
       if: runner.os == 'Linux'
       run: |
-        python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py
+        source /opt/o3de_venv/bin/activate
+        python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py
                 # /opt/O3DE/25.05.1/scripts/o3de.py
