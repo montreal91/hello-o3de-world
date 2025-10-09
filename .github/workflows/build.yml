@@ -1,4 +1,4 @@
-name: Build O3DE Project
+name: Build O3DE Project (Linux)
 
 on:
   push:
@@ -12,14 +12,15 @@ jobs:
     env:
       O3DE_VERSION: 25.05.1
       O3DE_WEB_VERSION_TAG: 2505_1
+      DEBUG: false
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest] # ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest] # ubuntu-latest, macos-latest]
         config: [profile]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
@@ -30,9 +31,8 @@ jobs:
       with:
         python-version: '3.10'
 
-    # Linux specific setup
     - name: Install dependencies (Linux)
-      if: runner.os == 'Linux'
+      # if: runner.os == 'Linux'
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -65,48 +65,37 @@ jobs:
         key: o3de-${{ runner.os }}-25.05.1
 
     - name: Check Linux environment
+      if: ${{env.DEBUG}}
       run: |
         echo "Current Location: [${pwd}]"
         ls
 
     - name: Download O3DE Engine
-      if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Linux'
+      if: steps.cache-o3de.outputs.cache-hit != 'true'
       run: |
-        # You'll need to download and extract O3DE here
-        # This is simplified - adjust URLs based on actual O3DE releases
-        echo "Download O3DE SDK for ${{ runner.os }}"
-        # Example for downloading (adjust actual URLs):
-        # wget https://o3de.org/downloads/o3de-sdk-windows.zip
-        # unzip o3de-sdk-windows.zip -d o3de-engine
+        echo "Download O3DE SDK"
         curl https://o3debinaries.org/main/Latest/Linux/o3de_${{ env.O3DE_WEB_VERSION_TAG }}.deb -o o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
-        ls # debugg
-        echo "-----------------------------"
-        echo "Tryin' to install deb package"
-        echo "-----------------------------"
-
-        # sudo apt install ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
     - name: DEB file check
-      if:  steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Linux'
-      run:
+      if: ${{ env.DEBUG }}
+      run: |
         ls -l o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
     - name: Install O-three-dee (Ubuntu)
-      if: steps.cache-o3de.outputs.cache-hit != 'true' && runner.os == 'Linux'
-      run:
+      run: |
         sudo dpkg -i ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
     - name: Check Python
+      if: ${{ env.DEBUG }}
       run: |
         python3 --version
 
     - name: Get Python
       run: |
-        echo "|Trying to get the Python stuff for o3de|"
         /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
     - name: python.sh Contents
-      if: false
+      if: ${{ env.DEBUG }}
       run: |
         cat /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
@@ -131,7 +120,7 @@ jobs:
 
 
     - name: Check O-Three-Dee Python
-      if: runner.os == 'Linux'
+      if: ${{ env.DEBUG }}
       run: |
         source /opt/o3de_venv/bin/activate
         python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -h
