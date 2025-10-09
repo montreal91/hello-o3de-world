@@ -98,7 +98,7 @@ jobs:
 
     - name: Init Python Environment
       if: runner.os == 'Linux'
-      run:
+      run: |
         echo "<<< Reading readme file >>>\n"
         cat /opt/O3DE/${{env.O3DE_VERSION}}/python/readme.md
         echo "\n<<< Finished reading a readme file >>>\n"
