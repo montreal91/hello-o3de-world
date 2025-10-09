@@ -105,6 +105,10 @@ jobs:
         echo "|Trying to get the Python stuff for o3de|"
         /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
+    - name: python.sh Contents
+      run: |
+        cat /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
+
     - name: Init Python Environment
       if: runner.os == 'Linux'
       run: |
