@@ -127,8 +127,7 @@ jobs:
 
     - name: Register O3DE engine & project
       run: |
-        ENGINE=/opt/o3de
-        echo "ENGINE=$ENGINE" >> $GITHUB_ENV
+        source /opt/o3de_venv/bin/activate
         python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register --this-engine
         python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -pp "${{ github.workspace }}"
         python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
