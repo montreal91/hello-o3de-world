@@ -12,7 +12,7 @@ jobs:
     env:
       O3DE_VERSION: 25.05.1
       O3DE_WEB_VERSION_TAG: 2505_1
-      DEBUG: 0
+      DEBUG: true
 
     strategy:
       fail-fast: false
@@ -32,7 +32,6 @@ jobs:
         python-version: '3.10'
 
     - name: Install dependencies (Linux)
-      # if: runner.os == 'Linux'
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -55,7 +54,6 @@ jobs:
           libxkbcommon-x11-dev \
           libxcb-xkb-dev
 
-    # Download and setup O3DE
     - name: Cache O3DE Engine
       id: cache-o3de
       uses: actions/cache@v4
@@ -65,9 +63,10 @@ jobs:
         key: o3de-${{ runner.os }}-25.05.1
 
     - name: Check Linux environment
-      if: ${{env.DEBUG}}
+      if: ${{env.DEBUG}} == 'true'
       run: |
         echo "Current Location: [${pwd}]"
+        echo ""
         ls
 
     - name: Download O3DE Engine
@@ -77,7 +76,7 @@ jobs:
         curl https://o3debinaries.org/main/Latest/Linux/o3de_${{ env.O3DE_WEB_VERSION_TAG }}.deb -o o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
     - name: DEB file check
-      if: ${{ env.DEBUG }}
+      if: ${{ env.DEBUG }} == "true"
       run: |
         ls -l o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
@@ -86,7 +85,7 @@ jobs:
         sudo dpkg -i ./o3de_${{ env.O3DE_WEB_VERSION_TAG}}.deb
 
     - name: Check Python
-      if: ${{ env.DEBUG }}
+      if: ${{ env.DEBUG }} == "true"
       run: |
         python3 --version
 
@@ -95,24 +94,18 @@ jobs:
         /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
     - name: python.sh Contents
-      if: ${{ env.DEBUG }}
+      if: ${{ env.DEBUG }} == "true"
       run: |
         cat /opt/O3DE/${{env.O3DE_VERSION}}/python/get_python.sh
 
     - name: Init Python Environment
-      if: runner.os == 'Linux'
       run: |
-        echo "<<< Reading readme file >>>\n"
-        cat /opt/O3DE/${{env.O3DE_VERSION}}/python/readme.md
-        echo "\n<<< Finished reading a readme file >>>\n"
-        echo "Trying to execute python venv installation script"
         /opt/O3DE/${{env.O3DE_VERSION}}/python/python.sh
 
     - name: Make o3de Virtual Environment
       run: |
         echo "Checking current location"
         pwd
-        # cd /opt/o3de
         python3 -m venv /opt/o3de_venv
         source /opt/o3de_venv/bin/activate
         pip install -r /opt/O3DE/${{env.O3DE_VERSION}}/python/requirements.txt
@@ -120,7 +113,7 @@ jobs:
 
 
     - name: Check O-Three-Dee Python
-      if: ${{ env.DEBUG }}
+      if: ${{ env.DEBUG }} == "true"
       run: |
         source /opt/o3de_venv/bin/activate
         python /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -h
@@ -129,12 +122,12 @@ jobs:
       run: |
         source /opt/o3de_venv/bin/activate
         python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register --this-engine
-        # python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py -pp "${{ github.workspace }}"
-        # python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
+        python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py register -pp "${{ github.workspace }}"
+        python3 /opt/O3DE/${{env.O3DE_VERSION}}/scripts/o3de.py set-default-project -pp "${{ github.workspace }}"
 
-    # - name: check curent directory
-    #   if: ${{ env.DEBUG }}
-    #   run: ls
+    - name: check curent directory
+      if: ${{ env.DEBUG }} == "true"
+      run: ls
 
     # - name: Make the Build Directory
     #   run: mkdir build
